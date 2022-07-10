@@ -7,7 +7,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "yarn migrate:prod && nest build",
-    "migrate:prod": "npx prisma migrate production",
+    "migrate:prod": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -27,6 +27,7 @@
     "@nestjs/graphql": "10.0.2",
     "@nestjs/mercurius": "10.0.0",
     "@nestjs/platform-fastify": "8.2.6",
+    "@npmcli/config": "^4.1.0",
     "@prisma/client": "4.0.0",
     "@yarnpkg/pnpify": "^4.0.0-rc.11",
     "bcrypt": "^5.0.1",
