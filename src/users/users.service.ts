@@ -104,6 +104,10 @@ export class UsersService {
 
   async search(username: string): Promise<UsersProfileOutput> {
     try {
+      if(username === "") {
+        return {success: true, users:[]}
+      }
+
       const users = await prisma.user.findMany({
         where: { username: { startsWith: username } },
       });
