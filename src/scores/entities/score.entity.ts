@@ -5,7 +5,7 @@ import {
   InputType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { ScoreType } from '../../../generated/client';
+import { ScoreType } from '@prisma/client';
 import { CoreEntity } from '../../common/entities/core.entity';
 
 registerEnumType(ScoreType, { name: 'ScoreType' });

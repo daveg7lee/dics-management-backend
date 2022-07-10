@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { UserType } from '../../generated/client';
+import { UserType } from '@prisma/client';
 
 export type AllowedRoles = keyof typeof UserType | 'Any';
 
