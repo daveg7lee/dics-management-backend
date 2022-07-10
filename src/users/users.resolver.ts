@@ -11,17 +11,19 @@ import { CreateUserOutput, CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { AuthUser } from '../auth/auth-user.decorator';
-import { Role } from '../auth/role.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import prisma from '../prisma';
+import { UsersProfileOutput } from './dto/users-profile.dto';
+import { Auth } from '../auth/auth.decorator';
+import { CoreOutput } from '../common/dtos/output.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => CreateUserOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   createUser(
     @Args('input') createUserInput: CreateUserInput,
   ): Promise<CreateUserOutput> {
@@ -38,16 +40,30 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query((returns) => User)
-  @Role(['Any'])
+  @Query(() => User)
+  @Auth(['Any'])
   me(@AuthUser() authUser: User) {
     return authUser;
   }
 
   @Query(() => UserProfileOutput)
-  @Role(['Any'])
+  @Auth(['Any'])
   findOne(@Args() userProfileInput: UserProfileInput) {
     return this.usersService.findById(userProfileInput.userId);
+  }
+
+  @Query(() => UsersProfileOutput)
+  @Auth(['Admin'])
+  searchUser(
+    @Args('username', { type: () => String }) username: string,
+  ): Promise<UsersProfileOutput> {
+    return this.usersService.search(username);
+  }
+
+  @Query(() => UsersProfileOutput)
+  @Auth(['Admin'])
+  seeUsers(): Promise<UsersProfileOutput> {
+    return this.usersService.findAll();
   }
 
   @Mutation(() => UpdateUserOutput)
@@ -58,9 +74,11 @@ export class UsersResolver {
     return this.usersService.update(authUser.id, updateUserInput);
   }
 
-  @Mutation(() => User)
-  @Role(['Admin'])
-  removeUser(@Args('username', { type: () => String }) username: string) {
+  @Mutation(() => CoreOutput)
+  @Auth(['Admin'])
+  removeUser(
+    @Args('username', { type: () => String }) username: string,
+  ): Promise<CoreOutput> {
     return this.usersService.remove(username);
   }
 

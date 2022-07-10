@@ -8,6 +8,7 @@ import { CreateUserInput, CreateUserOutput } from './dto/create-user.input';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { UserProfileOutput } from './dto/user-profile.dto';
+import { UsersProfileOutput } from './dto/users-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -75,14 +76,39 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<UsersProfileOutput> {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          NOT: {
+            type: 'Admin',
+          },
+        },
+        orderBy: { username: 'asc' },
+      });
+
+      return { success: true, users };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
   }
 
   async findById(id: string): Promise<UserProfileOutput> {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
       return { success: true, user };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  async search(username: string): Promise<UsersProfileOutput> {
+    try {
+      const users = await prisma.user.findMany({
+        where: { username: { startsWith: username } },
+      });
+
+      return { success: true, users };
     } catch (e) {
       return { success: false, error: e.message };
     }
