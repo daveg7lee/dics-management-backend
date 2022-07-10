@@ -27,6 +27,7 @@
     "@nestjs/graphql": "10.0.2",
     "@nestjs/mercurius": "10.0.0",
     "@nestjs/platform-fastify": "8.2.6",
+    "@npmcli/ci-detect": "^2.0.0",
     "@npmcli/config": "^4.1.0",
     "@prisma/client": "4.0.0",
     "@yarnpkg/pnpify": "^4.0.0-rc.11",

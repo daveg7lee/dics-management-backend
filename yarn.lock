@@ -1165,6 +1165,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@npmcli/ci-detect@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@npmcli/ci-detect@npm:2.0.0"
+  checksum: 26e964eca908706c1a612915cbc5614860ac7dbfacbb07870396c82b1377794f123a7aaa821c4a68575b67ff7e3ad170e296d3aa6a5e03dbab9b3f1e61491812
+  languageName: node
+  linkType: hard
+
 "@npmcli/config@npm:^4.1.0":
   version: 4.1.0
   resolution: "@npmcli/config@npm:4.1.0"
@@ -3272,6 +3279,7 @@ __metadata:
     "@nestjs/platform-fastify": 8.2.6
     "@nestjs/schematics": ^8.0.0
     "@nestjs/testing": ^8.0.0
+    "@npmcli/ci-detect": ^2.0.0
     "@npmcli/config": ^4.1.0
     "@prisma/client": 4.0.0
     "@types/express": ^4.17.13
