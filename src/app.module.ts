@@ -22,10 +22,10 @@ import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
       driver: MercuriusDriver,
       graphiql: true,
       autoSchemaFile: true,
-      context: ({ req, connection }) => {
+      context: (req) => {
         const TOKEN_KEY = 'x-jwt';
         return {
-          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+          token: req.headers[TOKEN_KEY]
         };
       },
     }),
