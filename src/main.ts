@@ -10,7 +10,11 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  app.enableCors();
+
+  app.register(require('fastify-cors'), {
+    origin: ['http://127.0.0.1:3000', "https://dics.netlify.app"],
+    methods: ['POST'],
+  });
 
   await app.listen(4000, '0.0.0.0');
 }
