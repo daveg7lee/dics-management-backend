@@ -84,10 +84,13 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async totalScores({ id }) {
-    const total = await prisma.score.count({
+    const scores = await prisma.score.findMany({
       where: { userId: id, type: 'Demerit' },
     });
-
+    let total = 0;
+    scores.map((score) => {
+      total -= score.score;
+    });
     return total;
   }
 
@@ -98,10 +101,14 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async totalMerit({ id }) {
-    const total = await prisma.score.count({
+    const scores = await prisma.score.findMany({
       where: { userId: id, type: 'Merit' },
     });
 
+    let total = 0;
+    scores.map((score) => {
+      total += score.score;
+    });
     return total;
   }
 }
