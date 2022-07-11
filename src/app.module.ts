@@ -28,6 +28,7 @@ import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
           token: req.headers[TOKEN_KEY]
         };
       },
+      
     }),
   ],
 })

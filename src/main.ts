@@ -9,10 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
+    {cors:true}
   );
 
   app.register(require('@fastify/cors'), {
-    origin: true,
+    origin: ['http://localhost:3000', "https://dics.netlify.app"],
+    credentials: 'true',
     methods: ['POST'],
   });
 
