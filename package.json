@@ -29,12 +29,14 @@
     "@nestjs/platform-fastify": "8.2.6",
     "@prisma/client": "4.0.0",
     "bcrypt": "^5.0.1",
+    "fastify": "^3.25.0",
     "graphql": "16.3.0",
     "jsonwebtoken": "^8.5.1",
     "mercurius": "9.2.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "7.4.0"
+    "rxjs": "7.4.0",
+    "webpack": "^5.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
