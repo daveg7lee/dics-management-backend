@@ -5,18 +5,28 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 
+const CORS_OPTIONS = {
+  origin: ['*'],
+  allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Origin',
+    'X-Requested-With',
+    'Accept',
+    'Content-Type',
+    'x-jwt',
+  ],
+  exposedHeaders: 'x-jwt',
+  methods: ['GET', 'PUT', 'OPTIONS', 'POST', 'DELETE'],
+};
+
 async function bootstrap() {
+  const adapter = new FastifyAdapter();
+  adapter.enableCors(CORS_OPTIONS);
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    {cors:true}
   );
-
-  app.register(require('@fastify/cors'), {
-    origin: ['http://localhost:3000', "https://dics.netlify.app"],
-    credentials: 'true',
-    methods: ['POST'],
-  });
 
   await app.listen(4000, '0.0.0.0');
 }
