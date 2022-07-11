@@ -9,11 +9,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({ logger: true }),
   );
 
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors()
+
+  app.register(require('@fastify/cors'), {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
 
   await app.listen(4000, '0.0.0.0');
 }
