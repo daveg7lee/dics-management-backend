@@ -11,8 +11,8 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  app.register(require('fastify-cors'), {
-    origin: ['http://127.0.0.1:3000', "https://dics.netlify.app"],
+  app.register(require('@fastify/cors'), {
+    origin: true,
     methods: ['POST'],
   });
 
