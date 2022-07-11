@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "yarn migrate:prod && nest build",
+    "build": "npm migrate:prod && nest build",
     "migrate:prod": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
