@@ -124,7 +124,6 @@ export class UsersService {
     { email, oldPassword, newPassword, avatar }: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     try {
-      console.log(avatar);
       let password;
 
       if (oldPassword) {
