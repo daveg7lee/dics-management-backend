@@ -25,10 +25,9 @@ import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
       context: (req) => {
         const TOKEN_KEY = 'x-jwt';
         return {
-          token: req.headers[TOKEN_KEY]
+          token: req.headers[TOKEN_KEY],
         };
       },
-      
     }),
   ],
 })

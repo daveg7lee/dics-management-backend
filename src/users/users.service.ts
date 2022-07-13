@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { checkPassword } from '../common/utils';
@@ -104,8 +105,8 @@ export class UsersService {
 
   async search(username: string): Promise<UsersProfileOutput> {
     try {
-      if(username === "") {
-        return {success: true, users:[]}
+      if (username === '') {
+        return { success: true, users: [] };
       }
 
       const users = await prisma.user.findMany({
@@ -119,16 +120,27 @@ export class UsersService {
   }
 
   async update(
-    id: string,
-    { email, password, avatar }: UpdateUserInput,
+    user: User,
+    { email, oldPassword, newPassword, avatar }: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     try {
+      let password;
+
+      if (oldPassword) {
+        const ok = checkPassword(oldPassword, user);
+        if (!ok) {
+          throw new Error('Wrong Password!');
+        } else {
+          password = bcrypt.hash(newPassword, 10);
+        }
+      }
+
       await prisma.user.update({
-        where: { id },
+        where: { id: user.id },
         data: {
-          ...(email && { email }),
-          ...(password && { password }),
-          ...(avatar && { avatar }),
+          email,
+          avatar,
+          password,
         },
       });
 

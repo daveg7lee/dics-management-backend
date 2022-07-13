@@ -71,7 +71,7 @@ export class UsersResolver {
     @AuthUser() authUser: User,
     @Args('input') updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
-    return this.usersService.update(authUser.id, updateUserInput);
+    return this.usersService.update(authUser, updateUserInput);
   }
 
   @Mutation(() => CoreOutput)
