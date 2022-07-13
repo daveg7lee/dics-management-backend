@@ -36,7 +36,6 @@
     "graphql": "16.5.0",
     "jsonwebtoken": "^8.5.1",
     "mercurius": "10.1.0",
-    "mercurius-upload": "^5.0.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "7.4.0",

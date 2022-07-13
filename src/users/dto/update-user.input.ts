@@ -17,7 +17,7 @@ export class UpdateUserInput extends PartialType(PickType(User, ['email'])) {
   newPassword: string;
 
   @Field(() => String, { nullable: true })
-  avatar?: string;
+  avatar: string;
 }
 
 @ObjectType()
