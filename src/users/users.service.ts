@@ -131,16 +131,16 @@ export class UsersService {
         if (!ok) {
           throw new Error('Wrong Password!');
         } else {
-          password = bcrypt.hash(newPassword, 10);
+          password = await bcrypt.hash(newPassword, 10);
         }
       }
 
       await prisma.user.update({
         where: { id: user.id },
         data: {
-          email,
-          avatar,
-          password,
+          ...(email && { email }),
+          ...(avatar && { avatar }),
+          ...(password && { password }),
         },
       });
 

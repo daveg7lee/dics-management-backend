@@ -1,0 +1,17 @@
+app: dics-management
+schema: http://graphql.local
+originUrl: http://graphql.local
+passThroughOnly: true
+rootTypeNames:
+  query: Query
+  mutation: Mutation
+rules:
+  - maxAge: 900
+    swr: 900
+    description: 'Cache users, searchUser, seeUsers, searchScore'
+    types:
+      Query:
+        - users
+        - seeUsers
+        - searchUser
+        - searchScore
