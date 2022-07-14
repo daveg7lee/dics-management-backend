@@ -16,4 +16,7 @@ export class CreateScoreInput extends PickType(Score, [
 }
 
 @ObjectType()
-export class CreateScoreOutput extends CoreOutput {}
+export class ScoreOutput extends CoreOutput {
+  @Field(() => Score, { nullable: true })
+  score?: Score;
+}

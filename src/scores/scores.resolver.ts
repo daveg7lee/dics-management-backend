@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Query, ResolveField } from '@nestjs/graphql';
 import { ScoresService } from './scores.service';
 import { Score } from './entities/score.entity';
-import { CreateScoreInput, CreateScoreOutput } from './dto/create-score.input';
+import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { Role } from '../auth/role.decorator';
 import { ScoresOutput } from './dto/scores.dto';
@@ -12,11 +12,11 @@ import prisma from '../prisma';
 export class ScoresResolver {
   constructor(private readonly scoresService: ScoresService) {}
 
-  @Mutation(() => CreateScoreOutput)
+  @Mutation(() => ScoreOutput)
   @Role(['Admin'])
   createScore(
     @Args('createScoreInput') createScoreInput: CreateScoreInput,
-  ): Promise<CreateScoreOutput> {
+  ): Promise<ScoreOutput> {
     return this.scoresService.create(createScoreInput);
   }
 
@@ -26,7 +26,7 @@ export class ScoresResolver {
     return this.scoresService.search(term);
   }
 
-  @Mutation(() => CoreOutput)
+  @Mutation(() => ScoreOutput)
   @Role(['Admin'])
   deleteScore(
     @Args('id', { type: () => String }) id: string,

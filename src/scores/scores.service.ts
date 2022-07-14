@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CoreOutput } from '../common/dtos/output.dto';
 import prisma from '../prisma';
-import { CreateScoreInput, CreateScoreOutput } from './dto/create-score.input';
+import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { ScoresOutput } from './dto/scores.dto';
 
 @Injectable()
@@ -14,9 +13,9 @@ export class ScoresService {
     uploader,
     detail,
     username,
-  }: CreateScoreInput): Promise<CreateScoreOutput> {
+  }: CreateScoreInput): Promise<ScoreOutput> {
     try {
-      await prisma.score.create({
+      const createdScore = await prisma.score.create({
         data: {
           score,
           article,
@@ -28,17 +27,17 @@ export class ScoresService {
         },
       });
 
-      return { success: true };
+      return { success: true, score: createdScore };
     } catch (e) {
       return { success: false, error: e.message };
     }
   }
 
-  async remove(id: string): Promise<CoreOutput> {
+  async remove(id: string): Promise<ScoreOutput> {
     try {
-      await prisma.score.delete({ where: { id } });
+      const score = await prisma.score.delete({ where: { id } });
 
-      return { success: true };
+      return { success: true, score };
     } catch (e) {
       return { success: false, error: e.message };
     }

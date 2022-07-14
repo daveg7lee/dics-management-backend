@@ -16,7 +16,6 @@ import { LoginInput, LoginOutput } from './dto/login.dto';
 import prisma from '../prisma';
 import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
-import { CoreOutput } from '../common/dtos/output.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -74,11 +73,11 @@ export class UsersResolver {
     return this.usersService.update(authUser, updateUserInput);
   }
 
-  @Mutation(() => CoreOutput)
+  @Mutation(() => UpdateUserOutput)
   @Auth(['Admin'])
   removeUser(
     @Args('username', { type: () => String }) username: string,
-  ): Promise<CoreOutput> {
+  ): Promise<UpdateUserOutput> {
     return this.usersService.remove(username);
   }
 

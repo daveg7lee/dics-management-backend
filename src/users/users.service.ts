@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { CoreOutput } from '../common/dtos/output.dto';
 import { checkPassword } from '../common/utils';
 import { JwtService } from '../jwt/jwt.service';
 import prisma from '../prisma';
@@ -30,7 +29,7 @@ export class UsersService {
 
       const encryptedPassword = await bcrypt.hash(password, 10);
 
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           username,
           email,
@@ -39,7 +38,7 @@ export class UsersService {
         },
       });
 
-      return { success: true };
+      return { success: true, user };
     } catch (e) {
       console.log(e);
       return { success: false, error: e.message };
@@ -120,14 +119,14 @@ export class UsersService {
   }
 
   async update(
-    user: User,
+    authUser: User,
     { email, oldPassword, newPassword, avatar }: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     try {
       let password;
 
       if (oldPassword) {
-        const ok = checkPassword(oldPassword, user);
+        const ok = checkPassword(oldPassword, authUser);
         if (!ok) {
           throw new Error('Wrong Password!');
         } else {
@@ -135,8 +134,8 @@ export class UsersService {
         }
       }
 
-      await prisma.user.update({
-        where: { id: user.id },
+      const user = await prisma.user.update({
+        where: { id: authUser.id },
         data: {
           ...(email && { email }),
           ...(avatar && { avatar }),
@@ -146,22 +145,23 @@ export class UsersService {
 
       return {
         success: true,
+        user,
       };
     } catch (e) {
       return { success: false, error: e.message };
     }
   }
 
-  async remove(username: string): Promise<CoreOutput> {
+  async remove(username: string): Promise<UpdateUserOutput> {
     try {
       const userExists = await prisma.user.findUnique({ where: { username } });
       if (!userExists) {
         return { success: false, error: '존재하지 않는 유저입니다.' };
       }
 
-      await prisma.user.delete({ where: { username } });
+      const user = await prisma.user.delete({ where: { username } });
 
-      return { success: true };
+      return { success: true, user };
     } catch (e) {
       return { success: false, error: e.message };
     }
