@@ -52,7 +52,6 @@ export class UsersResolver {
   }
 
   @Query(() => UsersProfileOutput)
-  @Auth(['Admin'])
   searchUser(
     @Args('username', { type: () => String }) username: string,
   ): Promise<UsersProfileOutput> {
@@ -60,7 +59,6 @@ export class UsersResolver {
   }
 
   @Query(() => UsersProfileOutput)
-  @Auth(['Admin'])
   seeUsers(): Promise<UsersProfileOutput> {
     return this.usersService.findAll();
   }

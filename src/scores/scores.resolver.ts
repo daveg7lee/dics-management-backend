@@ -2,7 +2,6 @@ import { Resolver, Mutation, Args, Query, ResolveField } from '@nestjs/graphql';
 import { ScoresService } from './scores.service';
 import { Score } from './entities/score.entity';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
-import { CoreOutput } from '../common/dtos/output.dto';
 import { Role } from '../auth/role.decorator';
 import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
@@ -30,7 +29,7 @@ export class ScoresResolver {
   @Role(['Admin'])
   deleteScore(
     @Args('id', { type: () => String }) id: string,
-  ): Promise<CoreOutput> {
+  ): Promise<ScoreOutput> {
     return this.scoresService.remove(id);
   }
 
