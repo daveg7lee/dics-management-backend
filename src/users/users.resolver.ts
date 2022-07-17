@@ -14,7 +14,7 @@ import { AuthUser } from '../auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import prisma from '../prisma';
-import { UsersProfileOutput } from './dto/users-profile.dto';
+import { UsersProfileInput, UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
 
 @Resolver(() => User)
@@ -32,11 +32,6 @@ export class UsersResolver {
   @Mutation(() => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.usersService.login(loginInput);
-  }
-
-  @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.usersService.findAll();
   }
 
   @Query(() => User)
