@@ -36,6 +36,7 @@
     "graphql": "16.5.0",
     "jsonwebtoken": "^8.5.1",
     "mercurius": "10.1.0",
+    "nodejs-nodemailer-outlook": "^1.2.4",
     "reflect-metadata": "0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "7.4.0",
