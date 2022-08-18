@@ -2,6 +2,7 @@ import { Resolver, Mutation, Args, Query, ResolveField } from '@nestjs/graphql';
 import { ScoresService } from './scores.service';
 import { Score } from './entities/score.entity';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
+import { CoreOutput } from '../common/dtos/output.dto';
 import { Role } from '../auth/role.decorator';
 import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
@@ -17,6 +18,12 @@ export class ScoresResolver {
     @Args('createScoreInput') createScoreInput: CreateScoreInput,
   ): Promise<ScoreOutput> {
     return this.scoresService.create(createScoreInput);
+  }
+
+  @Mutation(() => CoreOutput)
+  @Role(['Admin'])
+  resetScores(): Promise<CoreOutput> {
+    return this.scoresService.reset();
   }
 
   @Query(() => ScoresOutput)

@@ -8,7 +8,7 @@ import { CreateUserInput, CreateUserOutput } from './dto/create-user.input';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { UserProfileOutput } from './dto/user-profile.dto';
-import { UsersProfileInput, UsersProfileOutput } from './dto/users-profile.dto';
+import { UsersProfileOutput } from './dto/users-profile.dto';
 
 @Injectable()
 export class UsersService {

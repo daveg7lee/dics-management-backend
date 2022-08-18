@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodeoutlook from 'nodejs-nodemailer-outlook';
+import { CoreOutput } from '../common/dtos/output.dto';
 import prisma from '../prisma';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { ScoresOutput } from './dto/scores.dto';
@@ -427,6 +428,16 @@ export class ScoresService {
         success: true,
         scores,
       };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  async reset(): Promise<CoreOutput> {
+    try {
+      await prisma.score.deleteMany();
+
+      return { success: true };
     } catch (e) {
       return { success: false, error: e.message };
     }
