@@ -314,6 +314,7 @@ export class ScoresService {
                                               </p>
                                               <p style="margin: 0">
                                                 <strong>${article}</strong>
+                                                <strong>${detail}</strong>
                                               </p>
                                             </div>
                                           </td>
