@@ -9,7 +9,9 @@ import { CoreOutput } from '../../common/dtos/output.dto';
 import { User } from '../entities/user.entity';
 
 @InputType()
-export class UpdateUserInput extends PartialType(PickType(User, ['email'])) {
+export class UpdateUserInput extends PartialType(
+  PickType(User, ['email', 'grade']),
+) {
   @Field(() => String, { nullable: true })
   oldPassword: string;
 

@@ -14,7 +14,7 @@ import { AuthUser } from '../auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import prisma from '../prisma';
-import { UsersProfileInput, UsersProfileOutput } from './dto/users-profile.dto';
+import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
 
 @Resolver(() => User)

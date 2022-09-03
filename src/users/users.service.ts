@@ -120,7 +120,7 @@ export class UsersService {
 
   async update(
     authUser: User,
-    { email, oldPassword, newPassword, avatar }: UpdateUserInput,
+    { email, oldPassword, newPassword, avatar, grade }: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     try {
       let password;
@@ -140,6 +140,7 @@ export class UsersService {
           ...(email && { email }),
           ...(avatar && { avatar }),
           ...(password && { password }),
+          ...(grade && { grade }),
         },
       });
 

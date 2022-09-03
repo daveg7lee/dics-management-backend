@@ -4,11 +4,12 @@ import {
   registerEnumType,
   InputType,
 } from '@nestjs/graphql';
-import { UserType } from '@prisma/client';
+import { GradeType, UserType } from '@prisma/client';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Score } from '../../scores/entities/score.entity';
 
 registerEnumType(UserType, { name: 'UserType' });
+registerEnumType(GradeType, { name: 'GradeType' });
 
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
@@ -27,6 +28,9 @@ export class User extends CoreEntity {
 
   @Field(() => UserType)
   type: UserType;
+
+  @Field(() => GradeType)
+  grade: GradeType;
 
   @Field(() => [Score], { nullable: true })
   scores?: Score[];
