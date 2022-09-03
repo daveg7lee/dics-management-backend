@@ -408,6 +408,44 @@ export class ScoresService {
     }
   }
 
+  async createByGrade({
+    score,
+    article,
+    type,
+    date,
+    uploader,
+    detail,
+    grade,
+  }: CreateScoreInput): Promise<ScoreOutput> {
+    try {
+      const users = await prisma.user.findMany({ where: { grade } });
+
+      await Promise.all(
+        users.map(async (user) => {
+          await prisma.score.create({
+            data: {
+              score,
+              article,
+              type,
+              user: { connect: { username: user.username } },
+              date,
+              uploader,
+              detail,
+            },
+            include: { user: true },
+          });
+        }),
+      );
+
+      return { success: true };
+    } catch (e) {
+      return {
+        success: false,
+        error: e.message,
+      };
+    }
+  }
+
   async remove(id: string): Promise<ScoreOutput> {
     try {
       const score = await prisma.score.delete({ where: { id } });

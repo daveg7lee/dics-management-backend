@@ -20,6 +20,14 @@ export class ScoresResolver {
     return this.scoresService.create(createScoreInput);
   }
 
+  @Mutation(() => ScoreOutput)
+  @Role(['Admin'])
+  createScoreByGrade(
+    @Args('createScoreInput') createScoreInput: CreateScoreInput,
+  ): Promise<ScoreOutput> {
+    return this.scoresService.createByGrade(createScoreInput);
+  }
+
   @Mutation(() => CoreOutput)
   @Role(['Admin'])
   resetScores(): Promise<CoreOutput> {
