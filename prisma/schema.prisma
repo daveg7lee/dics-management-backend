@@ -19,6 +19,7 @@ enum ScoreType {
 }
 
 enum GradeType {
+  G6
   G7
   G8
   G9
