@@ -16,6 +16,7 @@ import { LoginInput, LoginOutput } from './dto/login.dto';
 import prisma from '../prisma';
 import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
+import { CoreOutput } from '../common/dtos/output.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -32,6 +33,11 @@ export class UsersResolver {
   @Mutation(() => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.usersService.login(loginInput);
+  }
+
+  @Mutation(() => CoreOutput)
+  async graduate(): Promise<CoreOutput> {
+    return this.usersService.graduate();
   }
 
   @Query(() => User)

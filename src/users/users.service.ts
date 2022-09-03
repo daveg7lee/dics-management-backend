@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { CoreOutput } from '../common/dtos/output.dto';
 import { checkPassword } from '../common/utils';
 import { JwtService } from '../jwt/jwt.service';
 import prisma from '../prisma';
@@ -19,6 +20,7 @@ export class UsersService {
     password,
     type,
     email,
+    grade,
   }: CreateUserInput): Promise<CreateUserOutput> {
     try {
       const exists = await prisma.user.findUnique({ where: { username } });
@@ -35,6 +37,7 @@ export class UsersService {
           email,
           password: encryptedPassword,
           type,
+          grade,
         },
       });
 
@@ -163,6 +166,56 @@ export class UsersService {
       const user = await prisma.user.delete({ where: { username } });
 
       return { success: true, user };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  async graduate(): Promise<CoreOutput> {
+    try {
+      const users = await prisma.user.findMany();
+
+      await Promise.all(
+        users.map(async (user) => {
+          if (user.grade === 'G12') {
+            await prisma.user.delete({ where: { id: user.id } });
+          } else {
+            if (user.grade === 'G6') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G7' },
+              });
+            } else if (user.grade === 'G7') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G8' },
+              });
+            } else if (user.grade === 'G8') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G9' },
+              });
+            } else if (user.grade === 'G9') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G10' },
+              });
+            } else if (user.grade === 'G10') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G11' },
+              });
+            } else if (user.grade === 'G11') {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { grade: 'G12' },
+              });
+            }
+          }
+        }),
+      );
+
+      return { success: true };
     } catch (e) {
       return { success: false, error: e.message };
     }
