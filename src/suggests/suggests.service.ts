@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { SuggestStatus } from '@prisma/client';
 import { CoreOutput } from '../common/dtos/output.dto';
 import prisma from '../prisma';
 import { User } from '../users/entities/user.entity';
-import { CreateSuggestInput } from './dto/create-suggest.input';
+import { CreateSuggestInput, SuggestOutput } from './dto/create-suggest.input';
 import { SuggestsOutput } from './dto/suggests.dto';
 import { UpdateSuggestInput } from './dto/update-suggest.input';
 
 @Injectable()
 export class SuggestsService {
   async create(
-    { text, type }: CreateSuggestInput,
+    { text, type, title }: CreateSuggestInput,
     user: User,
   ): Promise<CoreOutput> {
     try {
@@ -34,6 +35,7 @@ export class SuggestsService {
 
       await prisma.suggest.create({
         data: {
+          title,
           text,
           type,
           status: 'waiting',
@@ -50,15 +52,35 @@ export class SuggestsService {
     }
   }
 
-  async findAll(): Promise<SuggestsOutput> {
+  async findAll(status: SuggestStatus): Promise<SuggestsOutput> {
     try {
       const suggests = await prisma.suggest.findMany({
+        where: { status },
         include: { user: true },
       });
 
       return { success: true, suggests };
     } catch (e) {
       return { success: false, error: e.message };
+    }
+  }
+
+  async findOne(id: string): Promise<SuggestOutput> {
+    try {
+      const isSuggestExists = await prisma.suggest.findUnique({
+        where: { id },
+      });
+
+      if (!isSuggestExists) {
+        throw new Error('건의를 찾을 수 없습니다');
+      }
+
+      return { success: true, suggest: isSuggestExists };
+    } catch (e) {
+      return {
+        success: false,
+        error: e.message,
+      };
     }
   }
 
@@ -79,7 +101,7 @@ export class SuggestsService {
 
   async update(
     id: string,
-    { text, type }: UpdateSuggestInput,
+    { status }: UpdateSuggestInput,
   ): Promise<CoreOutput> {
     try {
       const isSuggestExists = await prisma.suggest.findUnique({
@@ -92,7 +114,7 @@ export class SuggestsService {
 
       await prisma.suggest.update({
         where: { id },
-        data: { text, type },
+        data: { status },
       });
 
       return { success: true };

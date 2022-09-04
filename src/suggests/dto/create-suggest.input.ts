@@ -3,7 +3,11 @@ import { CoreOutput } from '../../common/dtos/output.dto';
 import { Suggest } from '../entities/suggest.entity';
 
 @InputType()
-export class CreateSuggestInput extends PickType(Suggest, ['text', 'type']) {}
+export class CreateSuggestInput extends PickType(Suggest, [
+  'text',
+  'type',
+  'title',
+]) {}
 
 @ObjectType()
 export class SuggestOutput extends CoreOutput {

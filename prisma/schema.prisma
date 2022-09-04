@@ -38,6 +38,7 @@ enum SuggestStatus {
   waiting
   processing
   done
+  decline
 }
 
 model User {
@@ -68,6 +69,7 @@ model Score {
 
 model Suggest {
   id        String        @id @default(cuid())
+  title     String
   text      String
   user      User          @relation(fields: [userId], references: [id])
   userId    String

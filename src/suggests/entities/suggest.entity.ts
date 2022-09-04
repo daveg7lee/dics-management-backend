@@ -15,6 +15,9 @@ registerEnumType(SuggestStatus, { name: 'SuggestStatus' });
 @ObjectType()
 export class Suggest extends CoreEntity {
   @Field(() => String)
+  title: string;
+
+  @Field(() => String)
   text: string;
 
   @Field(() => String)

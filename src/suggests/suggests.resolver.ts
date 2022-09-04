@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SuggestsService } from './suggests.service';
 import { Suggest } from './entities/suggest.entity';
-import { CreateSuggestInput } from './dto/create-suggest.input';
+import { CreateSuggestInput, SuggestOutput } from './dto/create-suggest.input';
 import { UpdateSuggestInput } from './dto/update-suggest.input';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { AuthUser } from '../auth/auth-user.decorator';
@@ -23,9 +23,35 @@ export class SuggestsResolver {
   }
 
   @Auth(['Admin'])
-  @Query(() => SuggestsOutput, { name: 'suggests' })
-  findAll() {
-    return this.suggestsService.findAll();
+  @Query(() => SuggestsOutput, { name: 'findAllWaiting' })
+  findAllWaiting() {
+    return this.suggestsService.findAll('waiting');
+  }
+
+  @Auth(['Admin'])
+  @Query(() => SuggestsOutput, { name: 'findAllProcessing' })
+  findAllProcessing() {
+    return this.suggestsService.findAll('processing');
+  }
+
+  @Auth(['Admin'])
+  @Query(() => SuggestsOutput, { name: 'findAllDone' })
+  findAllDone() {
+    return this.suggestsService.findAll('done');
+  }
+
+  @Auth(['Admin'])
+  @Query(() => SuggestsOutput, { name: 'findAllDecline' })
+  findAllDecline() {
+    return this.suggestsService.findAll('decline');
+  }
+
+  @Auth(['Any'])
+  @Query(() => SuggestOutput, { name: 'suggest' })
+  findOne(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<SuggestOutput> {
+    return this.suggestsService.findOne(id);
   }
 
   @Auth(['Any'])

@@ -7,3 +7,9 @@ export class SuggestsOutput extends CoreOutput {
   @Field(() => [Suggest], { nullable: true })
   suggests?: Suggest[];
 }
+
+@ObjectType()
+export class SuggestOutput extends CoreOutput {
+  @Field(() => Suggest, { nullable: true })
+  suggest?: Suggest;
+}
