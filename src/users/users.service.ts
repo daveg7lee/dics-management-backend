@@ -99,6 +99,11 @@ export class UsersService {
   async findById(id: string): Promise<UserProfileOutput> {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
+
+      if (!user) {
+        throw new Error('유저를 찾을 수 없습니다.');
+      }
+
       return { success: true, user };
     } catch (e) {
       return { success: false, error: e.message };
@@ -129,7 +134,8 @@ export class UsersService {
       let password;
 
       if (oldPassword) {
-        const ok = checkPassword(oldPassword, authUser);
+        const ok = await checkPassword(oldPassword, authUser);
+
         if (!ok) {
           throw new Error('Wrong Password!');
         } else {
@@ -156,16 +162,16 @@ export class UsersService {
     }
   }
 
-  async remove(username: string): Promise<UpdateUserOutput> {
+  async remove(username: string): Promise<CoreOutput> {
     try {
       const userExists = await prisma.user.findUnique({ where: { username } });
       if (!userExists) {
         return { success: false, error: '존재하지 않는 유저입니다.' };
       }
 
-      const user = await prisma.user.delete({ where: { username } });
+      await prisma.user.delete({ where: { username } });
 
-      return { success: true, user };
+      return { success: true };
     } catch (e) {
       return { success: false, error: e.message };
     }

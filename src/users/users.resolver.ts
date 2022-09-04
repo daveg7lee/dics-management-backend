@@ -72,11 +72,11 @@ export class UsersResolver {
     return this.usersService.update(authUser, updateUserInput);
   }
 
-  @Mutation(() => UpdateUserOutput)
+  @Mutation(() => CoreOutput)
   @Auth(['Admin'])
   removeUser(
     @Args('username', { type: () => String }) username: string,
-  ): Promise<UpdateUserOutput> {
+  ): Promise<CoreOutput> {
     return this.usersService.remove(username);
   }
 
