@@ -28,6 +28,18 @@ enum GradeType {
   G12
 }
 
+enum SuggestType {
+  School
+  Dorm
+  Other
+}
+
+enum SuggestStatus {
+  waiting
+  processing
+  done
+}
+
 model User {
   id        String     @id @default(cuid())
   avatar    String     @default(value: "https://res.cloudinary.com/du4erd9mp/image/upload/v1609642686/User%20Profile/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-removebg-preview_1_qenllx.png")
@@ -37,6 +49,7 @@ model User {
   type      UserType
   grade     GradeType?
   scores    Score[]    @relation("ScoresOfUser")
+  suggests  Suggest[]
   createdAt DateTime   @default(now())
 }
 
@@ -51,4 +64,15 @@ model Score {
   uploader  String
   detail    String?
   createdAt DateTime  @default(now())
+}
+
+model Suggest {
+  id        String        @id @default(cuid())
+  text      String
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  type      SuggestType
+  reply     String?
+  status    SuggestStatus
+  createdAt DateTime      @default(now())
 }

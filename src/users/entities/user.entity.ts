@@ -7,6 +7,7 @@ import {
 import { GradeType, UserType } from '@prisma/client';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Score } from '../../scores/entities/score.entity';
+import { Suggest } from '../../suggests/entities/suggest.entity';
 
 registerEnumType(UserType, { name: 'UserType' });
 registerEnumType(GradeType, { name: 'GradeType' });
@@ -34,4 +35,7 @@ export class User extends CoreEntity {
 
   @Field(() => [Score], { nullable: true })
   scores?: Score[];
+
+  @Field(() => [Suggest], { nullable: true })
+  suggests?: Suggest[];
 }

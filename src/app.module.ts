@@ -10,6 +10,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
+import { SuggestsModule } from './suggests/suggests.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
         };
       },
     }),
+    SuggestsModule,
   ],
 })
 export class AppModule implements NestModule {
