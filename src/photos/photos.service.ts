@@ -9,11 +9,11 @@ import {
 
 @Injectable()
 export class PhotosService {
-  async create({ files, caption }: CreatePhotoInput): Promise<CoreOutput> {
+  async create({ files, caption }: CreatePhotoInput): Promise<PhotoOutput> {
     try {
-      await prisma.photo.create({ data: { files, caption } });
+      const photo = await prisma.photo.create({ data: { files, caption } });
 
-      return { success: true };
+      return { success: true, photo };
     } catch (e) {
       return { success: false, error: e.message };
     }
@@ -24,9 +24,11 @@ export class PhotosService {
       const photos = await prisma.photo.findMany({
         take: 20,
         skip: cursor ? 1 : 0,
-        cursor: {
-          id: cursor,
-        },
+        ...(cursor && {
+          cursor: {
+            id: cursor,
+          },
+        }),
       });
 
       return { success: true, photos };

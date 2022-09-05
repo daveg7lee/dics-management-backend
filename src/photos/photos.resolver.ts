@@ -18,7 +18,9 @@ export class PhotosResolver {
   }
 
   @Query(() => PhotosOutput, { name: 'photos' })
-  findAll(@Args('cursor', { type: () => String }) cursor: string) {
+  findAll(
+    @Args('cursor', { type: () => String, nullable: true }) cursor: string,
+  ) {
     return this.photosService.findAll(cursor);
   }
 
