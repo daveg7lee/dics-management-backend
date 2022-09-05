@@ -88,6 +88,7 @@ export class UsersService {
           },
         },
         orderBy: { username: 'asc' },
+        include: { scores: true },
       });
 
       return { success: true, users };

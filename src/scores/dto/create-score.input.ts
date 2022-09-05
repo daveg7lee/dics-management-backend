@@ -13,10 +13,10 @@ export class CreateScoreInput extends PickType(Score, [
   'detail',
 ]) {
   @Field(() => String, { nullable: true })
-  username: string;
+  username?: string;
 
   @Field(() => GradeType, { nullable: true })
-  grade: GradeType;
+  grade?: GradeType;
 }
 
 @ObjectType()
