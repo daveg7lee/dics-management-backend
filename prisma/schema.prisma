@@ -71,10 +71,17 @@ model Suggest {
   id        String        @id @default(cuid())
   title     String
   text      String
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   type      SuggestType
   reply     String?
   status    SuggestStatus
   createdAt DateTime      @default(now())
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  files     String[]
+  caption   String?
+  createdAt DateTime @default(now())
 }
