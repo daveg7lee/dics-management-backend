@@ -29,6 +29,7 @@ export class PhotosService {
             id: cursor,
           },
         }),
+        orderBy: { createdAt: 'desc' },
       });
 
       return { success: true, photos };
