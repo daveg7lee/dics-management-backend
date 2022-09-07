@@ -7,6 +7,7 @@ import { Role } from '../auth/role.decorator';
 import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
 import prisma from '../prisma';
+import { ScoreType } from '@prisma/client';
 
 @Resolver(() => Score)
 export class ScoresResolver {
@@ -30,8 +31,10 @@ export class ScoresResolver {
 
   @Mutation(() => CoreOutput)
   @Role(['Admin'])
-  resetScores(): Promise<CoreOutput> {
-    return this.scoresService.reset();
+  resetScores(
+    @Args('type', { type: () => ScoreType }) type: ScoreType,
+  ): Promise<CoreOutput> {
+    return this.scoresService.reset(type);
   }
 
   @Query(() => ScoresOutput)

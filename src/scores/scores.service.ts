@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ScoreType } from '@prisma/client';
 import { CoreOutput } from '../common/dtos/output.dto';
 import prisma from '../prisma';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
@@ -471,9 +472,9 @@ export class ScoresService {
     }
   }
 
-  async reset(): Promise<CoreOutput> {
+  async reset(type: ScoreType): Promise<CoreOutput> {
     try {
-      await prisma.score.deleteMany();
+      await prisma.score.deleteMany({ where: { type } });
 
       return { success: true };
     } catch (e) {
