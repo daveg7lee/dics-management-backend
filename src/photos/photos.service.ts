@@ -22,7 +22,7 @@ export class PhotosService {
   async findAll(cursor: string): Promise<PhotosOutput> {
     try {
       const photos = await prisma.photo.findMany({
-        take: 80,
+        take: 30,
         skip: cursor ? 1 : 0,
         ...(cursor && {
           cursor: {
