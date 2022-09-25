@@ -94,7 +94,8 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async scores({ id }) {
-    return prisma.score.findMany({ where: { userId: id } });
+    const scores = await prisma.score.findMany({ where: { userId: id } });
+    return scores;
   }
 
   @ResolveField(() => Int, { nullable: true })
