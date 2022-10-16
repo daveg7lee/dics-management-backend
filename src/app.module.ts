@@ -11,7 +11,6 @@ import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
 import { SuggestsModule } from './suggests/suggests.module';
-import { PhotosModule } from './photos/photos.module';
 
 @Module({
   imports: [
@@ -32,7 +31,6 @@ import { PhotosModule } from './photos/photos.module';
       },
     }),
     SuggestsModule,
-    PhotosModule,
   ],
 })
 export class AppModule implements NestModule {
