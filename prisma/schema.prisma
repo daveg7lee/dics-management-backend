@@ -78,10 +78,3 @@ model Suggest {
   status    SuggestStatus
   createdAt DateTime      @default(now())
 }
-
-model Photo {
-  id        String   @id @default(cuid())
-  files     String[]
-  caption   String?
-  createdAt DateTime @default(now())
-}
