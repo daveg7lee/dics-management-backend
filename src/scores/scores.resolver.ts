@@ -3,18 +3,18 @@ import { ScoresService } from './scores.service';
 import { Score } from './entities/score.entity';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { CoreOutput } from '../common/dtos/output.dto';
-import { Role } from '../auth/role.decorator';
 import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
 import prisma from '../prisma';
 import { ScoreType } from '@prisma/client';
+import { Auth } from 'src/auth/auth.decorator';
 
 @Resolver(() => Score)
 export class ScoresResolver {
   constructor(private readonly scoresService: ScoresService) {}
 
   @Mutation(() => ScoreOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   createScore(
     @Args('createScoreInput') createScoreInput: CreateScoreInput,
   ): Promise<ScoreOutput> {
@@ -22,7 +22,7 @@ export class ScoresResolver {
   }
 
   @Mutation(() => ScoreOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   createScoreByGrade(
     @Args('createScoreInput') createScoreInput: CreateScoreInput,
   ): Promise<ScoreOutput> {
@@ -30,7 +30,7 @@ export class ScoresResolver {
   }
 
   @Mutation(() => CoreOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   resetScores(
     @Args('type', { type: () => ScoreType }) type: ScoreType,
   ): Promise<CoreOutput> {
@@ -38,13 +38,13 @@ export class ScoresResolver {
   }
 
   @Query(() => ScoresOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   searchScore(@Args('term', { type: () => String }) term: string) {
     return this.scoresService.search(term);
   }
 
   @Mutation(() => ScoreOutput)
-  @Role(['Admin'])
+  @Auth(['Admin'])
   deleteScore(
     @Args('id', { type: () => String }) id: string,
   ): Promise<ScoreOutput> {
