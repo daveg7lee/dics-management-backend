@@ -8,6 +8,7 @@ import { AuthUser } from '../auth/auth-user.decorator';
 import { Auth } from '../auth/auth.decorator';
 import { User } from '../users/entities/user.entity';
 import { SuggestsOutput } from './dto/suggests.dto';
+import { ReplySuggestInput } from './dto/reply-suggest.input';
 
 @Resolver(() => Suggest)
 export class SuggestsResolver {
@@ -60,6 +61,7 @@ export class SuggestsResolver {
     return this.suggestsService.findMy(user);
   }
 
+  @Auth(['Any'])
   @Mutation(() => CoreOutput)
   updateSuggest(
     @Args('updateSuggestInput') updateSuggestInput: UpdateSuggestInput,
@@ -70,8 +72,20 @@ export class SuggestsResolver {
     );
   }
 
+  @Auth(['Any'])
   @Mutation(() => CoreOutput)
   removeSuggest(@Args('id', { type: () => String }) id: string) {
     return this.suggestsService.remove(id);
+  }
+
+  @Auth(['Any'])
+  @Mutation(() => CoreOutput)
+  replyTo(
+    @Args('replySuggestInput') replySuggestInput: ReplySuggestInput,
+  ): Promise<CoreOutput> {
+    return this.suggestsService.replyTo(
+      replySuggestInput.id,
+      replySuggestInput.text,
+    );
   }
 }

@@ -74,7 +74,15 @@ model Suggest {
   user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   type      SuggestType
-  reply     String?
+  reply     Reply[]
   status    SuggestStatus
   createdAt DateTime      @default(now())
+}
+
+model Reply {
+  id        String   @id @default(cuid())
+  text      String
+  suggest   Suggest  @relation(fields: [suggestId], references: [id], onDelete: Cascade)
+  suggestId String
+  createdAt DateTime @default(now())
 }

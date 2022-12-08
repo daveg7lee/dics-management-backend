@@ -7,6 +7,7 @@ import {
 import { SuggestStatus, SuggestType } from '@prisma/client';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { User } from '../../users/entities/user.entity';
+import { Reply } from './reply.entity';
 
 registerEnumType(SuggestType, { name: 'SuggestType' });
 registerEnumType(SuggestStatus, { name: 'SuggestStatus' });
@@ -29,8 +30,8 @@ export class Suggest extends CoreEntity {
   @Field(() => SuggestType)
   type: SuggestType;
 
-  @Field(() => String)
-  reply: string;
+  @Field(() => Reply, { nullable: true })
+  reply?: Reply;
 
   @Field(() => SuggestStatus)
   status: SuggestStatus;

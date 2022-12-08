@@ -143,4 +143,27 @@ export class SuggestsService {
       return { success: false, error: e.message };
     }
   }
+
+  async replyTo(id: string, text: string): Promise<CoreOutput> {
+    try {
+      const isSuggestExists = await prisma.suggest.findUnique({
+        where: { id },
+      });
+
+      if (!isSuggestExists) {
+        throw new Error('건의를 찾을 수 없습니다');
+      }
+
+      await prisma.reply.create({
+        data: { text, suggest: { connect: { id } } },
+      });
+
+      return { success: true };
+    } catch (e) {
+      return {
+        success: true,
+        error: e.message,
+      };
+    }
+  }
 }
