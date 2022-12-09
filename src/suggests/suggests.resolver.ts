@@ -2,13 +2,19 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SuggestsService } from './suggests.service';
 import { Suggest } from './entities/suggest.entity';
 import { CreateSuggestInput, SuggestOutput } from './dto/create-suggest.input';
-import { UpdateSuggestInput } from './dto/update-suggest.input';
+import {
+  UpdateSuggestInput,
+  UpdateSuggestOutput,
+} from './dto/update-suggest.input';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { AuthUser } from '../auth/auth-user.decorator';
 import { Auth } from '../auth/auth.decorator';
 import { User } from '../users/entities/user.entity';
 import { SuggestsOutput } from './dto/suggests.dto';
-import { ReplySuggestInput } from './dto/reply-suggest.input';
+import {
+  ReplySuggestInput,
+  ReplySuggestOutput,
+} from './dto/reply-suggest.input';
 
 @Resolver(() => Suggest)
 export class SuggestsResolver {
@@ -62,10 +68,10 @@ export class SuggestsResolver {
   }
 
   @Auth(['Any'])
-  @Mutation(() => CoreOutput)
+  @Mutation(() => UpdateSuggestOutput)
   updateSuggest(
     @Args('updateSuggestInput') updateSuggestInput: UpdateSuggestInput,
-  ): Promise<CoreOutput> {
+  ): Promise<UpdateSuggestOutput> {
     return this.suggestsService.update(
       updateSuggestInput.id,
       updateSuggestInput,
@@ -79,13 +85,15 @@ export class SuggestsResolver {
   }
 
   @Auth(['Any'])
-  @Mutation(() => CoreOutput)
+  @Mutation(() => ReplySuggestOutput)
   replyTo(
     @Args('replySuggestInput') replySuggestInput: ReplySuggestInput,
-  ): Promise<CoreOutput> {
+    @AuthUser() user,
+  ): Promise<ReplySuggestOutput> {
     return this.suggestsService.replyTo(
       replySuggestInput.id,
       replySuggestInput.text,
+      user,
     );
   }
 }

@@ -1,4 +1,5 @@
 import { ObjectType, Field, InputType } from '@nestjs/graphql';
+import { User } from 'src/users/entities/user.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Suggest } from './suggest.entity';
 
@@ -13,4 +14,10 @@ export class Reply extends CoreEntity {
 
   @Field(() => Suggest, { nullable: true })
   suggest?: Suggest;
+
+  @Field(() => String)
+  userId: string;
+
+  @Field(() => User, { nullable: true })
+  user?: User;
 }

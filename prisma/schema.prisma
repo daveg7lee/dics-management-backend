@@ -51,6 +51,7 @@ model User {
   grade     GradeType?
   scores    Score[]    @relation("ScoresOfUser")
   suggests  Suggest[]
+  replies   Reply[]
   createdAt DateTime   @default(now())
 }
 
@@ -82,7 +83,9 @@ model Suggest {
 model Reply {
   id        String   @id @default(cuid())
   text      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   suggest   Suggest  @relation(fields: [suggestId], references: [id], onDelete: Cascade)
   suggestId String
+  userId    String
   createdAt DateTime @default(now())
 }

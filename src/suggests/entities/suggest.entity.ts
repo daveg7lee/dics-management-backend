@@ -30,8 +30,8 @@ export class Suggest extends CoreEntity {
   @Field(() => SuggestType)
   type: SuggestType;
 
-  @Field(() => Reply, { nullable: true })
-  reply?: Reply;
+  @Field(() => [Reply], { nullable: true })
+  reply?: Reply[];
 
   @Field(() => SuggestStatus)
   status: SuggestStatus;

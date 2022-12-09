@@ -5,6 +5,7 @@ import {
   InputType,
 } from '@nestjs/graphql';
 import { GradeType, UserType } from '@prisma/client';
+import { Reply } from 'src/suggests/entities/reply.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Score } from '../../scores/entities/score.entity';
 import { Suggest } from '../../suggests/entities/suggest.entity';
@@ -35,6 +36,9 @@ export class User extends CoreEntity {
 
   @Field(() => [Score], { nullable: true })
   scores?: Score[];
+
+  @Field(() => [Reply], { nullable: true })
+  replies?: Reply[];
 
   @Field(() => [Suggest], { nullable: true })
   suggests?: Suggest[];
