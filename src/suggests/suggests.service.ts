@@ -92,6 +92,7 @@ export class SuggestsService {
     try {
       const suggests = await prisma.suggest.findMany({
         where: { userId: user.id },
+        include: { user: true, reply: { include: { user: true } } },
       });
 
       return {
