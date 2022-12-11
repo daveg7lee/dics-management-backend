@@ -1,19 +1,17 @@
-FROM node:16 AS builder
+FROM node:16-alpine AS builder
 WORKDIR /app
-
 COPY package*.json ./
-
-
-RUN npm i
-
+COPY prisma ./prisma/
+RUN yarn install
 COPY . .
-
-RUN npx prisma generate
-
-RUN npm run build
+RUN yarn run build
 
 FROM node:16-alpine
 WORKDIR /app
-ENV NODE_ENV production
-COPY --from=builder /app ./
-CMD ["npm", "run", "start:migrate:prod"]
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+
+CMD [ "yarn", "start:migrate:prod" ]
+EXPOSE 4000
