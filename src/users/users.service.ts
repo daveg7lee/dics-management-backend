@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/prisma.service';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { checkPassword } from '../common/utils';
 import { JwtService } from '../jwt/jwt.service';
-import prisma from '../prisma';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.input';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
@@ -13,7 +13,10 @@ import { UsersProfileOutput } from './dto/users-profile.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async create({
     username,
@@ -23,7 +26,7 @@ export class UsersService {
     grade,
   }: CreateUserInput): Promise<CreateUserOutput> {
     try {
-      const exists = await prisma.user.findUnique({ where: { username } });
+      const exists = await this.prisma.user.findUnique({ where: { username } });
 
       if (exists) {
         return { success: false, error: '이미 같은 이름의 유저가 존재합니다' };
@@ -31,7 +34,7 @@ export class UsersService {
 
       const encryptedPassword = await bcrypt.hash(password, 10);
 
-      const user = await prisma.user.create({
+      const user = await this.prisma.user.create({
         data: {
           username,
           email,
@@ -43,20 +46,22 @@ export class UsersService {
 
       return { success: true, user };
     } catch (e) {
-      console.log(e);
-      return { success: false, error: e.message };
+      return { success: false, error: "Couldn't create account" };
     }
   }
 
   async login({ username, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { username },
         select: { id: true, password: true },
       });
 
       if (!user) {
-        throw new Error('유저를 찾을 수 없습니다');
+        return {
+          success: false,
+          error: '유저를 찾을 수 없습니다',
+        };
       }
 
       const passwordCorrect = await checkPassword(password, user);
@@ -75,13 +80,13 @@ export class UsersService {
         token,
       };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: "Can't log user in." };
     }
   }
 
   async findAll(): Promise<UsersProfileOutput> {
     try {
-      const users = await prisma.user.findMany({
+      const users = await this.prisma.user.findMany({
         where: {
           NOT: {
             type: 'Admin',
@@ -93,21 +98,21 @@ export class UsersService {
 
       return { success: true, users };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 
   async findById(id: string): Promise<UserProfileOutput> {
     try {
-      const user = await prisma.user.findUnique({ where: { id } });
+      const user = await this.prisma.user.findUnique({ where: { id } });
 
       if (!user) {
-        throw new Error('유저를 찾을 수 없습니다.');
+        return { success: false, error: '유저를 찾을 수 없습니다.' };
       }
 
       return { success: true, user };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 
@@ -117,13 +122,13 @@ export class UsersService {
         return { success: true, users: [] };
       }
 
-      const users = await prisma.user.findMany({
+      const users = await this.prisma.user.findMany({
         where: { username: { startsWith: username } },
       });
 
       return { success: true, users };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 
@@ -138,13 +143,16 @@ export class UsersService {
         const ok = await checkPassword(oldPassword, authUser);
 
         if (!ok) {
-          throw new Error('Wrong Password!');
+          return {
+            success: false,
+            error: 'Wrong Password!',
+          };
         } else {
           password = await bcrypt.hash(newPassword, 10);
         }
       }
 
-      const user = await prisma.user.update({
+      const user = await this.prisma.user.update({
         where: { id: authUser.id },
         data: {
           ...(email && { email }),
@@ -159,61 +167,63 @@ export class UsersService {
         user,
       };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 
   async remove(username: string): Promise<CoreOutput> {
     try {
-      const userExists = await prisma.user.findUnique({ where: { username } });
+      const userExists = await this.prisma.user.findUnique({
+        where: { username },
+      });
       if (!userExists) {
         return { success: false, error: '존재하지 않는 유저입니다.' };
       }
 
-      await prisma.user.delete({ where: { username } });
+      await this.prisma.user.delete({ where: { username } });
 
       return { success: true };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 
   async graduate(): Promise<CoreOutput> {
     try {
-      const users = await prisma.user.findMany();
+      const users = await this.prisma.user.findMany();
 
       await Promise.all(
         users.map(async (user) => {
           if (user.grade === 'G12') {
-            await prisma.user.delete({ where: { id: user.id } });
+            await this.prisma.user.delete({ where: { id: user.id } });
           } else {
             if (user.grade === 'G6') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G7' },
               });
             } else if (user.grade === 'G7') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G8' },
               });
             } else if (user.grade === 'G8') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G9' },
               });
             } else if (user.grade === 'G9') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G10' },
               });
             } else if (user.grade === 'G10') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G11' },
               });
             } else if (user.grade === 'G11') {
-              await prisma.user.update({
+              await this.prisma.user.update({
                 where: { id: user.id },
                 data: { grade: 'G12' },
               });
@@ -224,7 +234,7 @@ export class UsersService {
 
       return { success: true };
     } catch (e) {
-      return { success: false, error: e.message };
+      return { success: false, error: 'Error occured' };
     }
   }
 }

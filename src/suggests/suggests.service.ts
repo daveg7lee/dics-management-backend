@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SuggestStatus } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 import { CoreOutput } from '../common/dtos/output.dto';
-import prisma from '../prisma';
 import { User } from '../users/entities/user.entity';
 import { CreateSuggestInput, SuggestOutput } from './dto/create-suggest.input';
 import { ReplySuggestOutput } from './dto/reply-suggest.input';
@@ -13,6 +13,8 @@ import {
 
 @Injectable()
 export class SuggestsService {
+  constructor(private readonly prisma: PrismaService) {}
+
   async create(
     { text, type, title }: CreateSuggestInput,
     user: User,
@@ -26,7 +28,7 @@ export class SuggestsService {
 
       const aWeekAgo = new Date(year, month, day - 7);
 
-      const createdSuggestInWeek = await prisma.suggest.findFirst({
+      const createdSuggestInWeek = await this.prisma.suggest.findFirst({
         where: {
           userId: user.id,
           createdAt: { gte: aWeekAgo, lte: today },
@@ -37,7 +39,7 @@ export class SuggestsService {
         throw new Error('1주 내에 제출된 건의가 이미 존재합니다.');
       }
 
-      await prisma.suggest.create({
+      await this.prisma.suggest.create({
         data: {
           title,
           text,
@@ -58,7 +60,7 @@ export class SuggestsService {
 
   async findAll(status: SuggestStatus): Promise<SuggestsOutput> {
     try {
-      const suggests = await prisma.suggest.findMany({
+      const suggests = await this.prisma.suggest.findMany({
         where: { status },
         include: { user: true, reply: { include: { user: true } } },
       });
@@ -71,7 +73,7 @@ export class SuggestsService {
 
   async findOne(id: string): Promise<SuggestOutput> {
     try {
-      const isSuggestExists = await prisma.suggest.findUnique({
+      const isSuggestExists = await this.prisma.suggest.findUnique({
         where: { id },
       });
 
@@ -90,7 +92,7 @@ export class SuggestsService {
 
   async findMy(user: User): Promise<SuggestsOutput> {
     try {
-      const suggests = await prisma.suggest.findMany({
+      const suggests = await this.prisma.suggest.findMany({
         where: { userId: user.id },
         include: { user: true, reply: { include: { user: true } } },
       });
@@ -109,7 +111,7 @@ export class SuggestsService {
     { status }: UpdateSuggestInput,
   ): Promise<UpdateSuggestOutput> {
     try {
-      const isSuggestExists = await prisma.suggest.findUnique({
+      const isSuggestExists = await this.prisma.suggest.findUnique({
         where: { id },
       });
 
@@ -117,7 +119,7 @@ export class SuggestsService {
         throw new Error('건의를 찾을 수 없습니다.');
       }
 
-      const suggest = await prisma.suggest.update({
+      const suggest = await this.prisma.suggest.update({
         where: { id },
         data: { status },
         include: { user: true, reply: { include: { user: true } } },
@@ -134,7 +136,7 @@ export class SuggestsService {
 
   async remove(id: string): Promise<CoreOutput> {
     try {
-      const isSuggestExists = await prisma.suggest.findUnique({
+      const isSuggestExists = await this.prisma.suggest.findUnique({
         where: { id },
       });
 
@@ -142,7 +144,7 @@ export class SuggestsService {
         throw new Error('건의를 찾을 수 없습니다');
       }
 
-      await prisma.suggest.delete({ where: { id } });
+      await this.prisma.suggest.delete({ where: { id } });
 
       return { success: true };
     } catch (e) {
@@ -156,7 +158,7 @@ export class SuggestsService {
     user: User,
   ): Promise<ReplySuggestOutput> {
     try {
-      const isSuggestExists = await prisma.suggest.findUnique({
+      const isSuggestExists = await this.prisma.suggest.findUnique({
         where: { id },
       });
 
@@ -164,7 +166,7 @@ export class SuggestsService {
         throw new Error('건의를 찾을 수 없습니다');
       }
 
-      await prisma.reply.create({
+      await this.prisma.reply.create({
         data: {
           text,
           suggest: { connect: { id } },
@@ -172,7 +174,7 @@ export class SuggestsService {
         },
       });
 
-      const suggest = await prisma.suggest.findUnique({
+      const suggest = await this.prisma.suggest.findUnique({
         where: { id },
         include: { user: true, reply: { include: { user: true } } },
       });

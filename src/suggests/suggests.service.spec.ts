@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '../jwt/jwt.service';
-import prisma from '../prisma';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { UsersService } from '../users/users.service';
 import { SuggestsService } from './suggests.service';
@@ -18,6 +18,15 @@ const mockJwtService = () => ({
   verify: jest.fn(),
 });
 
+const mockPrismaClient = () => ({
+  suggest: {
+    findOne: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
+    findUnique: jest.fn(),
+  },
+});
+
 describe('SuggestsService', () => {
   let service: SuggestsService;
   let userService: UsersService;
@@ -31,6 +40,10 @@ describe('SuggestsService', () => {
           provide: JwtService,
           useValue: mockJwtService(),
         },
+        {
+          provide: PrismaService,
+          useValue: mockPrismaClient(),
+        },
       ],
     }).compile();
 
@@ -38,69 +51,13 @@ describe('SuggestsService', () => {
     userService = module.get<UsersService>(UsersService);
   });
 
-  afterEach(async () => {
-    await prisma.user.deleteMany();
-  });
-
   describe('create', () => {
-    it('should create a suggest', async () => {
-      const userResult = await userService.create(createAccountArgs);
+    it.todo('should create a suggest');
 
-      const result = await service.create(
-        {
-          text: 'test',
-          title: 'test suggest',
-          type: 'School',
-        },
-        userResult.user,
-      );
-
-      expect(result.success).toBeTruthy();
-    });
-
-    it('1주 내에 제출된 건의가 있다면 실패', async () => {
-      const userResult = await userService.create(createAccountArgs);
-
-      await service.create(
-        {
-          text: 'test',
-          title: 'test suggest',
-          type: 'School',
-        },
-        userResult.user,
-      );
-
-      const result = await service.create(
-        {
-          text: 'test',
-          title: 'test suggest',
-          type: 'School',
-        },
-        userResult.user,
-      );
-
-      expect(result.success).toBeFalsy();
-      expect(result.error).toEqual('1주 내에 제출된 건의가 이미 존재합니다.');
-    });
+    it.todo('1주 내에 제출된 건의가 있다면 실패');
   });
 
   describe('findAll', () => {
-    it('should return all waiting suggest', async () => {
-      const userResult = await userService.create(createAccountArgs);
-
-      await service.create(
-        {
-          text: 'test',
-          title: 'test suggest',
-          type: 'School',
-        },
-        userResult.user,
-      );
-
-      const result = await service.findAll('waiting');
-
-      expect(result.success).toBeTruthy();
-      expect(result.suggests[0].text).toEqual('test');
-    });
+    it.todo('should return all waiting suggest');
   });
 });

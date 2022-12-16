@@ -19,12 +19,8 @@ export const checkPassword = async (
   password: string,
   user: Partial<User>,
 ): Promise<boolean> => {
-  try {
-    const ok = await bcrypt.compare(password, user.password);
-    return ok;
-  } catch (e) {
-    console.log(e);
-  }
+  const ok = await bcrypt.compare(password, user.password);
+  return ok;
 };
 
 export const uploadToS3 = async (file, userId, folderName) => {
