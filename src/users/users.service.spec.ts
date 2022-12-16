@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '../jwt/jwt.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { LoginInput } from './dto/login.dto';

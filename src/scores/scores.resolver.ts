@@ -5,13 +5,16 @@ import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
-import prisma from '../prisma';
 import { ScoreType } from '@prisma/client';
 import { Auth } from 'src/auth/auth.decorator';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => Score)
 export class ScoresResolver {
-  constructor(private readonly scoresService: ScoresService) {}
+  constructor(
+    private readonly scoresService: ScoresService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Mutation(() => ScoreOutput)
   @Auth(['Admin'])
@@ -53,6 +56,6 @@ export class ScoresResolver {
 
   @ResolveField(() => User, { nullable: true })
   async user({ id }) {
-    return prisma.score.findUnique({ where: { id } }).user();
+    return this.prisma.score.findUnique({ where: { id } }).user();
   }
 }

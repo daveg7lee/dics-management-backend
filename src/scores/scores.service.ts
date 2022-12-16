@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ScoreType } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { CreateScoreInput, ScoreOutput } from './dto/create-score.input';
 import { ScoresOutput } from './dto/scores.dto';

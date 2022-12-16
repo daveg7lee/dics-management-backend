@@ -16,6 +16,7 @@ import * as AdminJSPrisma from '@adminjs/prisma';
 import AdminJS from 'adminjs';
 import { PrismaClient } from '@prisma/client';
 import { DMMFClass } from '@prisma/client/runtime';
+import { PrismaModule } from './prisma/prisma.module';
 
 AdminJS.registerAdapter({
   Resource: AdminJSPrisma.Resource,
@@ -147,6 +148,7 @@ AdminJS.registerAdapter({
         };
       },
     }),
+    PrismaModule,
     UsersModule,
     ScoresModule,
     JwtModule.forRoot({

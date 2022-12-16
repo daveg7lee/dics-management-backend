@@ -13,14 +13,17 @@ import { User } from './entities/user.entity';
 import { AuthUser } from '../auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
-import prisma from '../prisma';
 import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
 import { CoreOutput } from '../common/dtos/output.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Mutation(() => CreateUserOutput)
   @Auth(['Admin'])
@@ -82,7 +85,7 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async totalScores({ id }) {
-    const scores = await prisma.score.findMany({
+    const scores = await this.prisma.score.findMany({
       where: { userId: id, type: 'Demerit' },
     });
     let total = 0;
@@ -94,13 +97,13 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async scores({ id }) {
-    const scores = await prisma.score.findMany({ where: { userId: id } });
+    const scores = await this.prisma.score.findMany({ where: { userId: id } });
     return scores;
   }
 
   @ResolveField(() => Int, { nullable: true })
   async totalMerit({ id }) {
-    const scores = await prisma.score.findMany({
+    const scores = await this.prisma.score.findMany({
       where: { userId: id, type: 'Merit' },
     });
 

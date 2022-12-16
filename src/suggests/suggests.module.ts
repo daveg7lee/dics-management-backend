@@ -3,6 +3,6 @@ import { SuggestsService } from './suggests.service';
 import { SuggestsResolver } from './suggests.resolver';
 
 @Module({
-  providers: [SuggestsResolver, SuggestsService]
+  providers: [SuggestsResolver, SuggestsService],
 })
 export class SuggestsModule {}
