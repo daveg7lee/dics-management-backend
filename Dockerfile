@@ -4,7 +4,6 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 RUN yarn install
-RUN npx prisma db push
 
 COPY . .
 

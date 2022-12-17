@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/prismaService/prisma.service';
 import { JwtService } from '../jwt/jwt.service';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { UsersService } from '../users/users.service';
