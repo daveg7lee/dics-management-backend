@@ -2,8 +2,12 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
+
 RUN yarn install
+RUN npx prisma db push
+
 COPY . .
+
 RUN yarn run build
 
 FROM node:16-alpine
