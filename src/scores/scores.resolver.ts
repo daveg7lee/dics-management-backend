@@ -7,7 +7,7 @@ import { ScoresOutput } from './dto/scores.dto';
 import { User } from '../users/entities/user.entity';
 import { ScoreType } from '@prisma/client';
 import { Auth } from 'src/auth/auth.decorator';
-import { PrismaService } from 'src/prismaService/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => Score)
 export class ScoresResolver {

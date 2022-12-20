@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SuggestStatus } from '@prisma/client';
-import { PrismaService } from 'src/prismaService/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { User } from '../users/entities/user.entity';
 import { CreateSuggestInput, SuggestOutput } from './dto/create-suggest.input';

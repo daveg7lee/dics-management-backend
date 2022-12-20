@@ -16,7 +16,7 @@ import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
 import { CoreOutput } from '../common/dtos/output.dto';
-import { PrismaService } from 'src/prismaService/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => User)
 export class UsersResolver {
