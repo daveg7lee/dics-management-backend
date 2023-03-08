@@ -28,6 +28,14 @@ enum GradeType {
   G12
 }
 
+enum DayType {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+}
+
 enum SuggestType {
   School
   Dorm
@@ -88,4 +96,31 @@ model Reply {
   suggestId String
   userId    String
   createdAt DateTime @default(now())
+}
+
+model TimeTables {
+  id         String      @id @default(cuid())
+  title      String
+  grade      GradeType
+  day        DayType
+  timeTables TimeTable[]
+  createdAt  DateTime    @default(now())
+}
+
+model TimeTable {
+  id           String      @id @default(cuid())
+  subject      Subject     @relation(fields: [subjectId], references: [id])
+  subjectId    String
+  startTime    String
+  endTime      String
+  TimeTables   TimeTables? @relation(fields: [TimeTablesId], references: [id])
+  TimeTablesId String?
+  createdAt    DateTime    @default(now())
+}
+
+model Subject {
+  id        String      @id @default(cuid())
+  subject   String
+  TimeTable TimeTable[]
+  createdAt DateTime    @default(now())
 }

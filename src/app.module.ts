@@ -17,6 +17,7 @@ import AdminJS from 'adminjs';
 import { PrismaClient } from '@prisma/client';
 import { DMMFClass } from '@prisma/client/runtime';
 import { PrismaModule } from './prisma/prisma.module';
+import { TimetablesModule } from './timetables/timetables.module';
 
 AdminJS.registerAdapter({
   Resource: AdminJSPrisma.Resource,
@@ -143,6 +144,31 @@ AdminJS.registerAdapter({
                   filterProperties: ['user', 'suggest', 'createdAt'],
                 },
               },
+              {
+                resource: { model: dmmf.modelMap.TimeTables, client: prisma },
+                options: {
+                  navigation: { name: '시간표 관리', icon: 'Time' },
+                },
+              },
+              {
+                resource: { model: dmmf.modelMap.TimeTable, client: prisma },
+                options: {
+                  navigation: { name: '시간표 관리', icon: 'Time' },
+                  listProperties: [
+                    'TimeTables',
+                    'subject',
+                    'startTime',
+                    'endTime',
+                  ],
+                },
+              },
+              {
+                resource: { model: dmmf.modelMap.Subject, client: prisma },
+                options: {
+                  navigation: { name: '시간표 관리', icon: 'Time' },
+                  listProperties: ['subject'],
+                },
+              },
             ],
           },
         };
@@ -160,6 +186,7 @@ AdminJS.registerAdapter({
       context: ({ req }) => ({ user: req['user'] }),
     }),
     SuggestsModule,
+    TimetablesModule,
   ],
 })
 export class AppModule implements NestModule {
