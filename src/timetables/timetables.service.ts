@@ -11,7 +11,12 @@ export class TimetablesService {
     try {
       const timetables = await this.prisma.timeTables.findMany({
         where: { grade },
-        include: { timeTables: { include: { subject: true } } },
+        include: {
+          timeTables: {
+            orderBy: { startTime: 'asc' },
+            include: { subject: true },
+          },
+        },
       });
 
       return { success: true, timetables };
