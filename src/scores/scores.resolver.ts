@@ -54,6 +54,14 @@ export class ScoresResolver {
     return this.scoresService.remove(id);
   }
 
+  @Mutation(() => CoreOutput)
+  @Auth(['Admin'])
+  deleteScoreByUser(
+    @Args('username', { type: () => String }) username: string,
+  ): Promise<CoreOutput> {
+    return this.scoresService.removeByUser(username);
+  }
+
   @ResolveField(() => User, { nullable: true })
   async user({ id }) {
     return this.prisma.score.findUnique({ where: { id } }).user();

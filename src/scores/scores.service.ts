@@ -105,6 +105,29 @@ export class ScoresService {
     }
   }
 
+  async removeByUser(username: string): Promise<CoreOutput> {
+    try {
+      const userExist = await this.prisma.user.findUnique({
+        where: { username },
+      });
+
+      if (!userExist) {
+        return {
+          success: false,
+          error: '존재하지 않는 학생입니다',
+        };
+      }
+
+      await this.prisma.score.deleteMany({
+        where: { userId: userExist.id, type: 'Demerit' },
+      });
+
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: "Can't remove score" };
+    }
+  }
+
   async search(term: string): Promise<ScoresOutput> {
     try {
       const scores = await this.prisma.score.findMany({
