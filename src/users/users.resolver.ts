@@ -157,7 +157,7 @@ export class UsersResolver {
 
     let total = 0;
     scores.map((score) => {
-      total += score.score;
+      total -= score.score;
     });
     return total;
   }
