@@ -85,12 +85,25 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async totalScores({ id }) {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
     const scores = await this.prisma.score.findMany({
-      where: { userId: id, type: 'Demerit' },
+      where: {
+        userId: id,
+        type: 'Demerit',
+      },
     });
+
     let total = 0;
     scores.map((score) => {
-      total -= score.score;
+      const year = score.date.split('-')[0];
+      const month = score.date.split('-')[1];
+
+      if (+year === currentYear && +month === currentMonth) {
+        total -= score.score;
+      }
     });
     return total;
   }
@@ -103,8 +116,43 @@ export class UsersResolver {
 
   @ResolveField(() => Int, { nullable: true })
   async totalMerit({ id }) {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
     const scores = await this.prisma.score.findMany({
       where: { userId: id, type: 'Merit' },
+    });
+
+    let total = 0;
+    scores.map((score) => {
+      const year = score.date.split('-')[0];
+      const month = score.date.split('-')[1];
+
+      if (+year === currentYear && +month === currentMonth) {
+        total += score.score;
+      }
+    });
+    return total;
+  }
+
+  @ResolveField(() => Int, { nullable: true })
+  async fullMerit({ id }) {
+    const scores = await this.prisma.score.findMany({
+      where: { userId: id, type: 'Merit' },
+    });
+
+    let total = 0;
+    scores.map((score) => {
+      total += score.score;
+    });
+    return total;
+  }
+
+  @ResolveField(() => Int, { nullable: true })
+  async fullDemerit({ id }) {
+    const scores = await this.prisma.score.findMany({
+      where: { userId: id, type: 'Demerit' },
     });
 
     let total = 0;
