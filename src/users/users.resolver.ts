@@ -150,7 +150,7 @@ export class UsersResolver {
   }
 
   @ResolveField(() => Int, { nullable: true })
-  async fullDemerit({ id }) {
+  async fullScores({ id }) {
     const scores = await this.prisma.score.findMany({
       where: { userId: id, type: 'Demerit' },
     });
