@@ -61,7 +61,14 @@ model User {
   scores    Score[]    @relation("ScoresOfUser")
   suggests  Suggest[]
   replies   Reply[]
+  fingerId  Int?
   createdAt DateTime   @default(now())
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  fingerId  Int
+  createdAt DateTime @default(now())
 }
 
 model Score {
