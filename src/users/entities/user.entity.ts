@@ -28,6 +28,9 @@ export class User extends CoreEntity {
   @Field(() => String)
   password: string;
 
+  @Field(() => Number)
+  fingerId: number;
+
   @Field(() => UserType)
   type: UserType;
 

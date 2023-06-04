@@ -161,4 +161,20 @@ export class UsersResolver {
     });
     return total;
   }
+
+  @ResolveField(() => Boolean)
+  async attendance({ fingerId }) {
+    if (fingerId === null) return false;
+
+    const today = new Date();
+
+    const attendance = await this.prisma.attendance.findFirst({
+      where: { fingerId, createdAt: { lte: today } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!attendance) return false;
+
+    return !!attendance;
+  }
 }
