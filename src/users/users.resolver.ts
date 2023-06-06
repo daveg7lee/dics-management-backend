@@ -17,6 +17,9 @@ import { UsersProfileOutput } from './dto/users-profile.dto';
 import { Auth } from '../auth/auth.decorator';
 import { CoreOutput } from '../common/dtos/output.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { getKSTDate } from 'src/common/utils';
+import * as moment from 'moment';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -166,11 +169,16 @@ export class UsersResolver {
   async attendance({ fingerId }) {
     if (fingerId === null) return false;
 
-    const today = new Date();
+    const today = getKSTDate();
 
     const attendance = await this.prisma.attendance.findFirst({
-      where: { fingerId, createdAt: { lte: today } },
-      orderBy: { createdAt: 'desc' },
+      where: {
+        fingerId,
+        createdAt: {
+          gte: moment(today).startOf('day').toDate(),
+          lt: moment(today).endOf('day').toDate(),
+        },
+      },
     });
 
     if (!attendance) return false;

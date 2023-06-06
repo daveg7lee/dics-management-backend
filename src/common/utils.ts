@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as AWS from 'aws-sdk';
 import { User } from '../users/entities/user.entity';
+import * as moment from 'moment-timezone';
 
 const region = 'ap-northeast-2';
 const Bucket = 'dics-bucket';
@@ -48,3 +49,8 @@ export const deleteInS3 = async (fileUrl) => {
     Key,
   }).promise();
 };
+
+export function getKSTDate() {
+  const kstDate = moment().tz('Asia/Seoul').format('YYYY-MM-DD');
+  return kstDate;
+}
